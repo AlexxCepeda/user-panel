@@ -5,5 +5,7 @@ import HeaderNav from "./components/Navbar/HeaderNav.vue";
 
 <template>
   <HeaderNav />
-  <RouterView />
+  <div class="vertical-center container mx-auto px-10 py-5">
+    <RouterView />
+  </div>
 </template>

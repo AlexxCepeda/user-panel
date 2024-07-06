@@ -1,9 +1,9 @@
 <template>
   <header
-    class="px-10 py-5 bg-gray-700 flex justify-between items-center absolute top-0 w-full z-10"
+    class="px-10 py-5 bg-gray-700 flex justify-between items-center w-full"
   >
     <Logo />
-    <nav>
+    <nav class="space-x-2">
       <Link to="home">Home</Link>
       <Link to="about">About</Link>
     </nav>
