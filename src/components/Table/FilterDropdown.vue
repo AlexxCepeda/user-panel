@@ -26,5 +26,5 @@ import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 const dropdown = ref(null);
 const show = ref(false);
-onClickOutside(dropdown, () => (show.value = !show.value));
+onClickOutside(dropdown, () => (show.value = false));
 </script>
