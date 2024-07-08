@@ -1,6 +1,23 @@
 <template>
   <div class="my-4 flex justify-between items-center">
     <h3 class="text-xl md:text-2xl font-bold text-sky-400">{{ title }}</h3>
+    <div class="flex gap-2">
+      <button
+        class="text-md font-semibold hover:text-sky-300"
+        :class="{ 'text-sky-300 underline': isTableView }"
+        @click="isTableView = true"
+      >
+        Table
+      </button>
+      <div class="w-0.5 bg-sky-400" />
+      <button
+        class="text-md font-semibold hover:text-sky-300"
+        :class="{ 'text-sky-300 underline': !isTableView }"
+        @click="isTableView = false"
+      >
+        Card
+      </button>
+    </div>
     <div class="flex items-center gap-2">
       <DownloadButton
         v-if="showDownload"
@@ -35,7 +52,10 @@
       </FilterDropdown>
     </div>
   </div>
-  <div class="bg-white relative border rounded-lg overflow-x-scroll">
+  <div
+    class="bg-white relative border rounded-lg overflow-x-scroll"
+    v-if="isTableView"
+  >
     <table class="w-full text-sm text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-sky-300">
         <tr>
@@ -78,7 +98,19 @@
       </tbody>
     </table>
   </div>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"
+    v-else
+  >
+    <CardItem
+      v-for="(item, index) in paginatedData"
+      :key="index"
+      v-if="tableHasData"
+      :data="item"
+    />
+  </div>
   <div class="flex justify-center mt-6 gap-4">
+    <p class="self-center">{{ currentPage }}/{{ totalPages }}</p>
     <div class="flex gap-2 items-center">
       <button
         class="px-4 py-2 bg-sky-500 text-white rounded disabled:opacity-50"
@@ -101,7 +133,7 @@
     <select
       id="itemsPerPage"
       class="rounded py-1 cursor-pointer bg-gray-200 px-3"
-      v-model="itemsPerPage"
+      v-model.number="itemsPerPage"
       @change="currentPage = 1"
     >
       <option value="5">5</option>
@@ -117,6 +149,7 @@ import GenderFilter from "@/components/Table/GenderFilter.vue";
 import FilterDropdown from "@/components/Table/FilterDropdown.vue";
 import AgeFilter from "@/components/Table/AgeFilter.vue";
 import DownloadButton from "@/components/Table/DownloadButton.vue";
+import CardItem from "@/components/Table/CardItem.vue";
 
 import { computed, reactive, ref, watch } from "vue";
 import { useCsvExport } from "@/composables/useCsvExport";
@@ -165,6 +198,9 @@ const itemsPerPage = ref(5);
 const totalPages = computed(() =>
   Math.ceil(filteredData.value.length / itemsPerPage.value)
 );
+
+//Card-Table View
+const isTableView = ref(true);
 
 const { exportCSV } = useCsvExport();
 
@@ -222,7 +258,7 @@ async function handleExportCSV() {
   } catch (error) {
     console.log("ERROR:", error);
   } finally {
-    setTimeout(() => modalStore.hideLoading(), 2000); //Just for simulating
+    setTimeout(() => modalStore.hideLoading(), 1000); //Just for simulating
   }
 }
 
