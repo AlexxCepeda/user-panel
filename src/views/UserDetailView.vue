@@ -15,7 +15,7 @@
         />
         <button
           v-if="showButton"
-          @click="handleButtonClick"
+          @click="handleDelete"
           class="absolute left-1/4 top-1/2 bg-red-500 text-white p-2 rounded shadow-lg transition-opacity"
         >
           Delete user
@@ -130,8 +130,8 @@ onBeforeUnmount(() => {
   userStore.resetSelectedUser();
 });
 
-const handleButtonClick = () => {
+function handleDelete() {
   descriptionDialog.value = "Realmente desea eliminar el usuario?";
   showDialog.value = true;
-};
+}
 </script>
