@@ -26,6 +26,13 @@
         </template>
       </Table>
     </div>
+    <Dialog
+      :isOpen="showDialog"
+      title="Estimado cliente"
+      :description="descriptionDialog"
+      @close="showDialog = false"
+      @accept="handleDeleteDialog"
+    />
   </main>
 </template>
 
@@ -34,6 +41,7 @@ import UserService from "@/services/UserService";
 import { useModalStore } from "@/stores/modal";
 import { onMounted, ref } from "vue";
 import Table from "@/components/Table/Table.vue";
+import Dialog from "@/components/Dialog.vue";
 
 const modalStore = useModalStore();
 const users = ref([]);
@@ -46,6 +54,9 @@ const columns = ref([
   { value: "age", label: "age", field: "dob.age" },
   { value: "email", label: "e-mail", field: "email" },
 ]);
+
+const showDialog = ref(false);
+const descriptionDialog = ref("");
 
 onMounted(async () => {
   try {
@@ -63,6 +74,14 @@ function handleDetail(item) {
   console.log(item);
 }
 function handleDelete(item) {
-  console.log(item);
+  descriptionDialog.value = "Realmente desea eliminar el usuario?";
+  showDialog.value = true;
+}
+
+function handleDeleteDialog() {
+  descriptionDialog.value = "El usuario esta siendo eliminado...";
+  setTimeout(() => {
+    showDialog.value = false;
+  }, 1000);
 }
 </script>
