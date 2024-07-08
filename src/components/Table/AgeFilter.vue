@@ -3,8 +3,8 @@
     <select
       id="filter"
       class="rounded py-1 cursor-pointer"
-      v-model="filter.type"
-      @change="updateFilter"
+      :value="type"
+      @change="$emit('update:type', $event.target.value)"
     >
       <option value="any">Any</option>
       <option value="greater">></option>
@@ -15,32 +15,24 @@
       type="number"
       id="age"
       class="w-full disabled:bg-white cursor-not-allowed rounded"
-      :disabled="filter.type == 'any'"
-      v-model="filter.ageNumber"
-      @input="updateFilter"
+      :disabled="type == 'any'"
+      :value="age"
+      @input="$emit('update:age', $event.target.value)"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-
 const props = defineProps({
-  modelValue: {
-    type: Object,
+  type: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: [String, null],
     required: true,
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
-const filter = ref({ ...props.modelValue });
-
-watch(
-  filter,
-  (newFilter) => {
-    emit("update:modelValue", { ...newFilter });
-  },
-  { deep: true }
-);
+const emit = defineEmits(["update:type", "update:age"]);
 </script>
