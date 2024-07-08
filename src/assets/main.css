@@ -4,6 +4,10 @@
 
 @layer components {
   .vertical-center {
-    height: calc(100vh - 76px);
+    min-height: calc(100vh - 76px);
   }
+}
+
+.card-wrapper {
+  @apply bg-gray-700 h-full w-full shadow-lg rounded-lg;
 }
