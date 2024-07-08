@@ -1,7 +1,13 @@
 <template>
   <main>
     <div v-if="!!users.length">
-      <Table :data="users" :columns="columns" :showActions="true" title="Users">
+      <Table
+        :data="users"
+        :columns="columns"
+        :showActions="true"
+        title="Users"
+        :showDownload="true"
+      >
         <template #actions="{ item }">
           <div class="flex flex-col md:flex-row md:gap-2">
             <button
