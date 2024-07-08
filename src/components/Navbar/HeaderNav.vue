@@ -5,7 +5,7 @@
     <Logo />
     <nav class="space-x-2">
       <Link to="home">Home</Link>
-      <Link to="about">About</Link>
+      <Link to="users">Users</Link>
     </nav>
   </header>
 </template>

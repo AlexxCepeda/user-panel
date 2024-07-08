@@ -1,8 +1,8 @@
 <template>
   <HeaderNav />
-  <div class="vertical-center container mx-auto px-10 py-5">
+  <main class="vertical-center container mx-auto px-10 py-5">
     <RouterView />
-  </div>
+  </main>
   <LoadingModal />
 </template>
 
