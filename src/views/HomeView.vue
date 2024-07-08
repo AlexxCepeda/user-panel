@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="pb-10">
     <div v-if="!!users.length">
       <Table
         :data="users"

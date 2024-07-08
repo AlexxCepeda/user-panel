@@ -78,7 +78,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(item, index) in filteredData"
+          v-for="(item, index) in paginatedData"
           :key="index"
           class="border-b"
           v-if="tableHasData"
@@ -109,6 +109,37 @@
       </tbody>
     </table>
   </div>
+  <div class="flex justify-center mt-6 gap-4">
+    <div class="flex gap-2 items-center">
+      <button
+        class="px-4 py-2 bg-sky-500 text-white rounded disabled:opacity-50"
+        :disabled="currentPage === 1"
+        :class="{ 'cursor-not-allowed': currentPage === 1 }"
+        @click="currentPage--"
+      >
+        <
+      </button>
+      <span>{{ currentPage }}</span>
+      <button
+        class="px-4 py-2 bg-sky-500 text-white rounded disabled:opacity-50"
+        :disabled="currentPage === totalPages"
+        :class="{ 'cursor-not-allowed': currentPage === totalPages }"
+        @click="currentPage++"
+      >
+        >
+      </button>
+    </div>
+    <select
+      id="itemsPerPage"
+      class="rounded py-1 cursor-pointer bg-gray-200 px-3"
+      v-model.number="itemsPerPage"
+      @change="currentPage = 1"
+    >
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+    </select>
+  </div>
 </template>
 
 <script setup>
@@ -117,7 +148,7 @@ import GenderFilter from "@/components/Table/GenderFilter.vue";
 import FilterDropdown from "@/components/Table/FilterDropdown.vue";
 import AgeFilter from "@/components/Table/AgeFilter.vue";
 
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, watch } from "vue";
 import { useCsvExport } from "@/composables/useCsvExport";
 import { getPropertyAssociate } from "@/utils/index";
 import { useModalStore } from "@/stores/modal";
@@ -157,6 +188,14 @@ const radioOptions = [
   { value: "female", label: "female" },
 ];
 
+//Pagination
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+const totalPages = computed(() =>
+  Math.ceil(filteredData.value.length / itemsPerPage.value)
+);
+
 const { exportCSV } = useCsvExport();
 
 const filteredData = computed(() => {
@@ -191,14 +230,18 @@ const filteredData = computed(() => {
   return data;
 });
 
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredData.value.slice(start, end);
+});
+
 const tableHasData = computed(() => filteredData.value.length > 0);
 
 function cleanFilters() {
   countryFilter.value = "";
   genderFilter.value = "all";
-  nextTick(() => {
-    ageFilter.value = { type: "any", ageNumber: null };
-  });
+  ageFilter.value = { type: "any", ageNumber: null };
 }
 
 async function handleExportCSV() {
@@ -211,4 +254,9 @@ async function handleExportCSV() {
     setTimeout(() => modalStore.hideLoading(), 2000); //Just for simulating
   }
 }
+
+watch(
+  [countryFilter, genderFilter, () => ageFilter.value.ageNumber],
+  () => (currentPage.value = 1)
+);
 </script>
