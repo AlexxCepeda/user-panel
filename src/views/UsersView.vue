@@ -39,6 +39,7 @@
 <script setup>
 import UserService from "@/services/UserService";
 import { useModalStore } from "@/stores/modal";
+import { useUsersStore } from "@/stores/users";
 import { onMounted, ref } from "vue";
 import Table from "@/components/Table/Table.vue";
 import Dialog from "@/components/Dialog.vue";
@@ -46,6 +47,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const modalStore = useModalStore();
+const usersStore = useUsersStore();
 const users = ref([]);
 const columns = ref([
   { value: "gender", label: "gender", field: "gender" },
@@ -73,6 +75,7 @@ onMounted(async () => {
 });
 
 function handleDetail(item) {
+  usersStore.setSelectedUser(item);
   router.push({ name: "user-detail", params: { id: item.login.uuid } });
 }
 function handleDelete(item) {
